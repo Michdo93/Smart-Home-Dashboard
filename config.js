@@ -20,7 +20,7 @@ window.DASHBOARD_CONFIG = {
   language: "de",
 
   // Designs aus dem Ordner themes/ (das erste ist die Voreinstellung)
-  themes: ["standard", "glas"],
+  themes: ["standard", "glas", "eink"],
 
   // Dienst für die Verlaufsdiagramme; null = Standard von openHAB
   persistenceService: "rrd4j",

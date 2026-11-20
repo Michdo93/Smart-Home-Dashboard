@@ -8,7 +8,8 @@
   --text: #1c2430;
   --muted: #5f6b7a;
   --line: #dde3ea;
-  --accent: #e08a00;
+  --accent: #c97a00;             /* Flächen: mind. 3:1 zum Hintergrund */
+  --accent-ink: #9a5b00;         /* Schrift: mind. 4,5:1 */
   --accent-text: #1c2430;
   --ok: #1e9e5a;
   --bad: #d64545;
@@ -23,6 +24,7 @@
     --muted: #9aa7b7;
     --line: #2a3646;
     --accent: #ffb703;
+    --accent-ink: #ffb703;
   }
 }
 :root[data-theme="dark"] {
@@ -32,4 +34,5 @@
   --muted: #9aa7b7;
   --line: #2a3646;
   --accent: #ffb703;
+  --accent-ink: #ffb703;
 }

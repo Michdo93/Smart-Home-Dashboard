@@ -92,9 +92,9 @@ main { padding: 4px 16px 24px; }
 .card h2 + .point, .point:first-child { border-top: 0; }
 .point-label { color: var(--muted); }
 .point-value { font-variant-numeric: tabular-nums; text-align: right; }
-.point-value.is-active { color: var(--accent); font-weight: 600; }
+.point-value.is-active { color: var(--accent-ink, var(--accent)); font-weight: 600; }
 .point-value img { max-width: 160px; border-radius: 8px; }
-a.point-value { color: var(--accent); }
+a.point-value { color: var(--accent-ink, var(--accent)); }
 button.link {
   min-height: var(--touch);      /* ein Wert, der etwas öffnet, ist Bedienfläche */
   border: 0; background: none; padding: 0 0 0 8px; font: inherit; color: inherit;
@@ -190,7 +190,8 @@ button.big-value, .big-value {
 }
 .lock-title { margin: 0; font-size: 1.2rem; }
 .lock-dots {
-  margin: 0; min-height: 1.5em; letter-spacing: .4em; color: var(--accent);
+  margin: 0; min-height: 1.5em; letter-spacing: .4em;
+  color: var(--accent-ink, var(--accent));
 }
 .lock-pad { display: grid; grid-template-columns: repeat(3, 72px); gap: 12px; }
 .lock-pad button {

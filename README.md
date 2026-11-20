@@ -16,10 +16,10 @@ Ein Dashboard für openHAB 5 in reinem HTML, CSS und JavaScript – ohne Framewo
 - **Echtzeit** über Server-Sent Events (`ItemStateChangedEvent`), mit Wiederverbinden und Nachladen nach einer Unterbrechung.
 - **Uhrzeit** des Geräts in der Kopfzeile.
 - **Deutsch und Englisch** (i18n), Zahlen und Zeiten nach Sprache (l10n).
-- **Themes:** `standard` und `glas`, jeweils hell und dunkel; ein Theme ist nur eine CSS-Datei mit Variablen.
+- **Themes:** `standard`, `glas` und `eink` (schwarzweiß für E-Paper), jeweils hell und dunkel; ein Theme ist nur eine CSS-Datei mit Variablen. Kontrast nach WCAG geprüft (Text ≥ 4,5 : 1, Bedienelemente ≥ 3 : 1).
 - **Sperrbildschirm** mit PIN, per Knopf oder nach einigen Minuten ohne Bedienung – ein Sichtschutz, keine Sicherheit.
 - **Wandtablets:** `?room=gVH_Kueche&kiosk=1` startet in einem Raum und blendet die Raumleiste aus.
-- **Mobile First**, Bedienflächen mindestens 44 px.
+- **Mobile First**, jede Bedienfläche mindestens 44 × 44 px.
 
 ## Aufbau
 

@@ -13,6 +13,7 @@
   --muted: #566274;
   --line: rgb(25 32 43 / .12);
   --accent: #6a5cff;
+  --accent-ink: #4f40d9;
   --accent-text: #ffffff;
   --ok: #19a35b;
   --bad: #e0464e;
@@ -34,6 +35,7 @@
     --muted: #a9adcf;
     --line: rgb(255 255 255 / .12);
     --accent: #8f84ff;
+    --accent-ink: #8f84ff;
     --shadow: 0 8px 30px rgb(0 0 0 / .35);
   }
 }
@@ -48,5 +50,6 @@
   --muted: #a9adcf;
   --line: rgb(255 255 255 / .12);
   --accent: #8f84ff;
+  --accent-ink: #8f84ff;
   --shadow: 0 8px 30px rgb(0 0 0 / .35);
 }
