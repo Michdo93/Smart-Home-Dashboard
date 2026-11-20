@@ -28,7 +28,7 @@ Ein Dashboard für openHAB 5 in reinem HTML, CSS und JavaScript – ohne Framewo
 | `config.js` | – | Adresse, Token, oberste Gruppe, Übersicht, Reihenfolge der Räume |
 | `js/store.js` | Model | `ItemStore`: Zustände und Abonnenten (Observer) |
 | `js/widgets.js` | View | ein Bedienelement je Item-Typ |
-| `js/modules.js` | View | Gerätemodule (Lampe, Thermostat) und allgemeine Karte |
+| `js/modules.js` | View | Gerätemodule (Lampe, Thermostat, Wetter) und allgemeine Karte |
 | `js/color.js`, `js/history.js`, `js/dialog.js` | View | Farbkreis, Verlaufsdiagramm, Fenster |
 | `js/lock.js` | View | Sperrbildschirm |
 | `js/format.js`, `js/i18n.js` | View | Zustände lesbar machen, Texte in Deutsch und Englisch |
