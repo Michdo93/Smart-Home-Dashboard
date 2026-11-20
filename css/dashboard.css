@@ -47,7 +47,7 @@ body {
   padding: 10px 16px; scrollbar-width: none;
 }
 .rooms button {
-  flex: none; min-height: 36px; padding: 0 14px;
+  flex: none; min-height: var(--touch); padding: 0 16px;
   border: 1px solid var(--line); border-radius: var(--pill, 999px);
   background: var(--surface); color: var(--text); font: inherit; cursor: pointer;
 }
@@ -96,7 +96,8 @@ main { padding: 4px 16px 24px; }
 .point-value img { max-width: 160px; border-radius: 8px; }
 a.point-value { color: var(--accent); }
 button.link {
-  border: 0; background: none; padding: 0; font: inherit; color: inherit;
+  min-height: var(--touch);      /* ein Wert, der etwas öffnet, ist Bedienfläche */
+  border: 0; background: none; padding: 0 0 0 8px; font: inherit; color: inherit;
   cursor: pointer; text-decoration: underline dotted var(--muted);
   text-underline-offset: 4px;
 }
@@ -114,16 +115,20 @@ button, select, input { font: inherit; color: inherit; }
   min-width: 4.5em; text-align: center; font-variant-numeric: tabular-nums;
 }
 
-.toggle {
-  position: relative; width: 52px; height: 30px; flex: none;
-  border: 0; border-radius: 999px; background: var(--line); cursor: pointer;
+.toggle {                        /* Trefferfläche 44 px, Spur 30 px */
+  position: relative; width: 56px; height: var(--touch); flex: none;
+  border: 0; background: none; padding: 0; cursor: pointer;
+}
+.toggle::before {
+  content: ""; position: absolute; inset: 7px 2px;
+  border-radius: 999px; background: var(--line);
 }
 .toggle::after {
-  content: ""; position: absolute; top: 3px; left: 3px;
+  content: ""; position: absolute; top: 10px; left: 5px;
   width: 24px; height: 24px; border-radius: 50%;
   background: #fff; transition: transform .15s;
 }
-.toggle[aria-checked="true"] { background: var(--accent); }
+.toggle[aria-checked="true"]::before { background: var(--accent); }
 .toggle[aria-checked="true"]::after { transform: translateX(22px); }
 
 /* Slider wächst mit, bleibt aber in der Karte; die Zahl hat festen Platz */
@@ -169,7 +174,7 @@ button.big-value, .big-value {
 .chart { position: relative; height: 260px; }
 .segmented { display: flex; gap: 6px; margin-bottom: 10px; }
 .segmented button {
-  flex: 1; min-height: 36px; border: 1px solid var(--line);
+  flex: 1; min-height: var(--touch); border: 1px solid var(--line);
   border-radius: var(--control-radius, 10px); background: var(--control, var(--bg));
   cursor: pointer;
 }
