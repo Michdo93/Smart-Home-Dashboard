@@ -39,6 +39,12 @@ Ein Dashboard für openHAB 5 in reinem HTML, CSS und JavaScript – ohne Framewo
 | `lib/iro.min.js` | – | [iro.js](https://github.com/jaames/iro.js) 5.5.2 (MPL-2.0) |
 | `lib/chart.umd.min.js` | – | [Chart.js](https://github.com/chartjs/Chart.js) 4.6.1 (MIT) |
 
+## Beispiele zum Buch
+
+| Datei | Kapitel | Inhalt |
+|---|---|---|
+| `beispiele/01-erste-schritte.html` | 3 | Verbinden, Item lesen, Änderungen abonnieren, schalten |
+
 ## Installation
 
 Am einfachsten liefert openHAB das Dashboard selbst aus – dann gibt es keine CORS-Probleme:

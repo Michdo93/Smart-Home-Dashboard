@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>Erste Schritte mit js-openhab-rest-client</title>
+  <script src="../lib/openhab.min.js"></script>
+</head>
+<body>
+<pre id="log"></pre>
+<script type="module">
+const { OpenHABClient, Items, ItemEvents, iterSSEEvents } = window.openHAB;
+const log = (text) => (document.querySelector("#log").textContent += `${text}\n`);
+const NAME = "Wohnzimmer_Deckenlampe_Schalter";
+
+// 1. verbinden – das Dashboard liegt auf demselben Server wie openHAB
+const client = await new OpenHABClient(location.origin).ready;
+log(`verbunden: ${client.isLoggedIn}`);
+const items = new Items(client);
+
+// 2. ein Item lesen
+const lampe = await items.getItem(NAME);
+log(`${lampe.label}: ${lampe.state} (${lampe.type}, Tags ${lampe.tags})`);
+
+// 3. Änderungen abonnieren (Server-Sent Events)
+const stream = await new ItemEvents(client).ItemStateChangedEvent(NAME);
+(async () => {
+  for await (const event of iterSSEEvents(stream)) {
+    log(`Ereignis: ${event.payload.oldValue} → ${event.payload.value}`);
+  }
+})();
+
+// 4. schalten
+const neu = lampe.state === "ON" ? "OFF" : "ON";
+log(`Befehl ${neu}: ${JSON.stringify(await items.sendCommand(NAME, neu))}`);
+log(`Zustand jetzt: ${await items.getItemState(NAME)}`);
+</script>
+</body>
+</html>
