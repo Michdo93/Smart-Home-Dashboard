@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard mit Material Design 3</title>
+  <link rel="stylesheet" href="../lib/beercss/beer.min.css">
+  <script type="module" src="../lib/beercss/beer.min.js"></script>
+  <script type="module" src="../lib/beercss/material-dynamic-colors.min.js"></script>
+  <script src="../lib/openhab.min.js"></script>
+  <script type="module" src="03-material.js"></script>
+  <style>
+    .farben { display: flex; gap: 8px; flex-wrap: wrap; }
+    button.circle { --_size: 44px; }
+    .farben button[aria-pressed="true"] { outline: 3px solid var(--primary); }
+    /* Spur und Schalter bleiben schmal, die Trefferfläche wird 44 px hoch */
+    .slider > input { block-size: 44px; }
+    .switch { block-size: 44px; }
+  </style>
+</head>
+<body>
+  <header class="primary-container">
+    <nav><h5 class="max" id="titel">…</h5></nav>
+  </header>
+  <main class="responsive">
+    <div class="grid" id="karten"></div>
+  </main>
+</body>
+</html>

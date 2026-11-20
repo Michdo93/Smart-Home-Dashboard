@@ -38,12 +38,19 @@ Ein Dashboard für openHAB 5 in reinem HTML, CSS und JavaScript – ohne Framewo
 | `lib/openhab.min.js` | – | [js-openhab-rest-client](https://github.com/Michdo93/js-openhab-rest-client) (Commit `5c5f160`, MIT) |
 | `lib/iro.min.js` | – | [iro.js](https://github.com/jaames/iro.js) 5.5.2 (MPL-2.0) |
 | `lib/chart.umd.min.js` | – | [Chart.js](https://github.com/chartjs/Chart.js) 4.6.1 (MIT) |
+| `lib/bootstrap/` | – | [Bootstrap](https://github.com/twbs/bootstrap) 5.3.8, nur CSS (MIT) – für Beispiel 02 |
+| `lib/beercss/` | – | [Beer CSS](https://github.com/beercss/beercss) 5.0.3 (MIT), [material-dynamic-colors](https://github.com/beercss/material-dynamic-colors) 1.1.4 (MIT), Material Symbols (Apache-2.0) – für Beispiel 03 |
 
 ## Beispiele zum Buch
 
 | Datei | Kapitel | Inhalt |
 |---|---|---|
 | `beispiele/01-erste-schritte.html` | 3 | Verbinden, Item lesen, Änderungen abonnieren, schalten |
+| `beispiele/raum.js` | 7 | Model und Controller für die Beispiele 02 und 03 (nutzt `js/store.js`, `js/widgets.js`, `js/format.js`) |
+| `beispiele/02-bootstrap.html`, `.js` | 7 | derselbe Raum mit [Bootstrap](https://getbootstrap.com) 5.3.8 |
+| `beispiele/03-material.html`, `.js` | 7 | derselbe Raum in Material Design 3 mit [Beer CSS](https://www.beercss.com) 5.0.3 |
+
+Die Beispiele 02 und 03 zeigen den Raum aus `?room=` (Voreinstellung `gVH_Wohnzimmer`).
 
 ## Installation
 
