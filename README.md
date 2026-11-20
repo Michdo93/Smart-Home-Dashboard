@@ -10,7 +10,7 @@ Ein Dashboard für openHAB 5 in reinem HTML, CSS und JavaScript – ohne Framewo
 - **Ein Bedienelement je Item-Typ:** Schalter, Slider (Dimmer), Farbwähler (Color), ▲ ■ ▼ (Rollershutter), ⏮ ▶ ⏭ (Player), − / + (Sollwerte), Auswahl (Befehlsoptionen); alles andere als formatierter Wert.
 - **Bedienbar ist, was das Modell sagt:** Punkte mit dem Tag `Control`, `Setpoint` oder `Switch`. Messwerte (`Measurement`, `Status`, `Alarm`) werden nur angezeigt.
 - **Bereiche und Optionen aus openHAB:** `stateDescription` (min, max, step, pattern) und `commandDescription` (Optionen) der Items.
-- **Gerätemodule:** Lampen (`Lightbulb`) und Thermostate (`Thermostat`) bekommen eigene Karten, alle anderen Geräte die allgemeine. Neue Module in `js/modules.js`.
+- **Gerätemodule:** Lampen (`Lightbulb`), Thermostate (`Thermostat`) und Wetter (`WeatherStation`, `WeatherService`) bekommen eigene Karten, alle anderen Geräte die allgemeine. Neue Module in `js/modules.js`.
 - **Farbkreis** mit [iro.js](https://iro.js.org) für Color-Items.
 - **Verlaufsdiagramme** aus der Persistence mit [Chart.js](https://www.chartjs.org): Klick auf einen Zahlenwert, 6 h, 24 h oder 7 Tage.
 - **Echtzeit** über Server-Sent Events (`ItemStateChangedEvent`), mit Wiederverbinden und Nachladen nach einer Unterbrechung.

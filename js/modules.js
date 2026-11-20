@@ -3,8 +3,9 @@
  *
  * Eine Hue-Lampe hat mehrere Items (Schalter, Helligkeit, Farbe, Effekt …).
  * Ein Modul fasst sie zu einer Karte zusammen und wird über das Geräte-Tag
- * der Gruppe gewählt (Lightbulb, Thermostat …). Für alle anderen Geräte
- * gibt es die allgemeine Karte. Neue Module: MODULES.<Tag> = (gerät, ctx) => …
+ * der Gruppe gewählt (Lightbulb, Thermostat, WeatherStation …). Für alle
+ * anderen Geräte gibt es die allgemeine Karte.
+ * Neue Module: MODULES.<Tag> = (gerät, ctx) => …
  */
 import {
   control, el, pointRow, setpointControl, showState, switchControl
@@ -76,9 +77,48 @@ function thermostat({ group, points }, ctx) {
   return node;
 }
 
+/** Symbole als SVG-Pfade (24 × 24), gezeichnet in der Textfarbe */
+const ICONS = {
+  Wind: "M3 8h11a3 3 0 1 0-3-3M3 12h16a3 3 0 1 1-3 3M3 16h8",
+  Rain: "M7 15a5 5 0 1 1 3-9 6 6 0 0 1 11 4 4 4 0 0 1-4 5zM8 19l-1 2M12 19l-1 2"
+    + "M16 19l-1 2",
+  Humidity: "M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z",
+  Pressure: "M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18zM12 12l4-4"
+};
+
+function icon(path) {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("aria-hidden", "true");
+  const shape = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  shape.setAttribute("d", path);
+  svg.append(shape);
+  return svg;
+}
+
+/** Wetter: Temperatur groß, die übrigen Werte als Kacheln mit Symbol. */
+function weather({ group, points }, ctx) {
+  const temperature = find(points, "Measurement", "Temperature");
+  if (!temperature) return genericCard({ group, points }, ctx);
+  const node = card(group.label, "module weather");
+  node.append(showState(el("button", { class: "big-value link",
+    onclick: () => ctx.history?.(temperature) }), temperature, ctx.store));
+  const facts = points.filter((item) => item !== temperature).map((item) => {
+    const tag = item.tags?.find((name) => ICONS[name]);
+    const value = showState(el("strong"), item, ctx.store);
+    const open = ctx.history ? () => ctx.history(item) : null;   // Verlauf
+    return el(open ? "button" : "div", { class: "fact", onclick: open },
+      tag ? icon(ICONS[tag]) : "", value, el("span", {}, item.label));
+  });
+  node.append(el("div", { class: "facts" }, ...facts));
+  return node;
+}
+
 export const MODULES = {
   Lightbulb: lightbulb,
-  Thermostat: thermostat
+  Thermostat: thermostat,
+  WeatherStation: weather,
+  WeatherService: weather
 };
 
 /** Wählt das Modul nach den Tags der Gerätegruppe. */
