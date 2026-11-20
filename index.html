@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>Smart-Home-Dashboard</title>
+  <link rel="stylesheet" href="css/dashboard.css">
+  <!-- REST-Client für openHAB (die Live-Demo tauscht nur diese Zeile) -->
+  <script src="lib/openhab.min.js"></script>
+  <script src="config.js"></script>
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <span id="status" class="status" data-state="connecting"
+          role="img" aria-label="verbinde …"></span>
+    <h1 id="title">Smart-Home-Dashboard</h1>
+    <button id="theme" class="icon-button" aria-label="Hell oder dunkel">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" fill="none"
+                stroke="currentColor" stroke-width="2"/>
+        <path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>
+      </svg>
+    </button>
+  </header>
+  <nav id="rooms" class="rooms" role="tablist" aria-label="Räume"></nav>
+  <main id="content"><p class="hint">Lade Items …</p></main>
+  <div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>
