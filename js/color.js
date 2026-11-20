@@ -8,10 +8,10 @@ import { openDialog } from "./dialog.js";
 import { hsbOf } from "./format.js";
 import { t } from "./i18n.js";
 
-export function openColorWheel(item, send) {
+export function openColorWheel(item, send, title = item.label) {
   const box = document.createElement("div");
   box.className = "color-wheel";
-  const dialog = openDialog(`${item.label} – ${t("color")}`, box);
+  const dialog = openDialog(`${title} – ${t("color")}`, box);
   const [h, s, v] = hsbOf(item.state);
   const size = Math.min(280, window.innerWidth - 80);
   const picker = new window.iro.ColorPicker(box, {

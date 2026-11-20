@@ -67,7 +67,8 @@ function thermostat({ group, points }, ctx) {
     ctx.store.subscribe(heating.name, (item) => (badge.hidden = item.state !== "ON"));
   } else badge.hidden = true;
   node.append(el("div", { class: "thermo-head" }, big, badge),
-    el("div", { class: "point" }, el("span", { class: "point-label" }, t("setpoint")),
+    el("div", { class: "point", "data-item": target.name },
+      el("span", { class: "point-label" }, t("setpoint")),
       setpointControl(target, ctx)));
   const shown = new Set([current, target, heating]);
   node.append(...points.filter((item) => !shown.has(item))

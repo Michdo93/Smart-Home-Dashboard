@@ -30,11 +30,14 @@ let client;
 let items;
 let current = params.get("room") ?? "overview";
 
+/** Das Gerät (die Gruppe), zu dem ein Punkt gehört */
+const deviceOf = (item) => store.get(item.groupNames?.[0]);
+
 /** Kontext für Widgets und Module */
 const ctx = {
   store,
   send,
-  color: (item) => openColorWheel(item, send),
+  color: (item) => openColorWheel(item, send, deviceOf(item)?.label),
   history: Persistence ? (item) => openHistory(item, loadHistory) : null
 };
 
