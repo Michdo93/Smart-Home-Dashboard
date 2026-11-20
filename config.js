@@ -16,6 +16,20 @@ window.DASHBOARD_CONFIG = {
   // Titel in der Kopfzeile
   title: "Virtuelles Haus",
 
+  // Sprache beim ersten Aufruf: "de" oder "en"
+  language: "de",
+
+  // Designs aus dem Ordner themes/ (das erste ist die Voreinstellung)
+  themes: ["standard", "glas"],
+
+  // Dienst für die Verlaufsdiagramme; null = Standard von openHAB
+  persistenceService: "rrd4j",
+
+  // Sperrbildschirm: pin = null schaltet ihn ab. Nur ein Sichtschutz –
+  // die PIN steht im Browser und ist für Kundige lesbar.
+  // afterMinutes: automatisch sperren (null = nie), startLocked: beim Laden
+  lock: { pin: null, afterMinutes: 5, startLocked: true },
+
   // Gruppen mit Summen oder Mittelwerten für die Übersicht
   overview: ["gVH_Innen", "gVH_Lichter", "gVH_Fenster", "gVH_Verbrauch"],
 

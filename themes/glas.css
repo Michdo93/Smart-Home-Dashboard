@@ -1,0 +1,52 @@
+/*
+ * Theme "glas" – Farbverlauf im Hintergrund, halbdurchsichtige Karten.
+ * Gleiche Variablen wie "standard", dazu --page, --blur und --shadow.
+ */
+:root {
+  --page: linear-gradient(140deg, #dfe9f3 0%, #f6e7f0 50%, #e4f2ea 100%) fixed;
+  --bg: rgb(255 255 255 / .55);
+  --surface: rgb(255 255 255 / .62);
+  --surface-solid: #ffffff;
+  --bar: rgb(255 255 255 / .7);
+  --control: rgb(255 255 255 / .7);
+  --text: #19202b;
+  --muted: #566274;
+  --line: rgb(25 32 43 / .12);
+  --accent: #6a5cff;
+  --accent-text: #ffffff;
+  --ok: #19a35b;
+  --bad: #e0464e;
+  --radius: 22px;
+  --control-radius: 14px;
+  --blur: blur(14px) saturate(140%);
+  --shadow: 0 8px 30px rgb(30 40 80 / .12);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page: linear-gradient(140deg, #0f1229 0%, #251437 50%, #0b2430 100%) fixed;
+    --bg: rgb(20 22 45 / .55);
+    --surface: rgb(255 255 255 / .07);
+    --surface-solid: #1a1d36;
+    --bar: rgb(15 18 41 / .7);
+    --control: rgb(255 255 255 / .08);
+    --text: #eef0ff;
+    --muted: #a9adcf;
+    --line: rgb(255 255 255 / .12);
+    --accent: #8f84ff;
+    --shadow: 0 8px 30px rgb(0 0 0 / .35);
+  }
+}
+:root[data-theme="dark"] {
+  --page: linear-gradient(140deg, #0f1229 0%, #251437 50%, #0b2430 100%) fixed;
+  --bg: rgb(20 22 45 / .55);
+  --surface: rgb(255 255 255 / .07);
+  --surface-solid: #1a1d36;
+  --bar: rgb(15 18 41 / .7);
+  --control: rgb(255 255 255 / .08);
+  --text: #eef0ff;
+  --muted: #a9adcf;
+  --line: rgb(255 255 255 / .12);
+  --accent: #8f84ff;
+  --shadow: 0 8px 30px rgb(0 0 0 / .35);
+}

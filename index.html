@@ -7,26 +7,37 @@
   <meta name="color-scheme" content="light dark">
   <title>Smart-Home-Dashboard</title>
   <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" id="theme-css" href="themes/standard.css">
   <!-- REST-Client für openHAB (die Live-Demo tauscht nur diese Zeile) -->
   <script src="lib/openhab.min.js"></script>
+  <script src="lib/iro.min.js"></script>
+  <script src="lib/chart.umd.min.js"></script>
   <script src="config.js"></script>
   <script type="module" src="js/app.js"></script>
 </head>
 <body>
   <header class="topbar">
-    <span id="status" class="status" data-state="connecting"
-          role="img" aria-label="verbinde …"></span>
+    <span id="status" class="status" data-state="connecting" role="img"></span>
     <h1 id="title">Smart-Home-Dashboard</h1>
-    <button id="theme" class="icon-button" aria-label="Hell oder dunkel">
-      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-        <circle cx="12" cy="12" r="9" fill="none"
-                stroke="currentColor" stroke-width="2"/>
-        <path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>
+    <time id="clock" class="clock"></time>
+    <button id="lock" class="icon-button" aria-label="Sperren" hidden>
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"
+           fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="5" y="11" width="14" height="10" rx="2"/>
+        <path d="M8 11V8a4 4 0 0 1 8 0v3"/>
+      </svg>
+    </button>
+    <button id="settings" class="icon-button" aria-label="Einstellungen">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"
+           fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1
+                 M4.9 19.1 7 17M17 7l2.1-2.1"/>
       </svg>
     </button>
   </header>
   <nav id="rooms" class="rooms" role="tablist" aria-label="Räume"></nav>
-  <main id="content"><p class="hint">Lade Items …</p></main>
+  <main id="content"></main>
   <div id="toast" class="toast" role="status" hidden></div>
 </body>
 </html>

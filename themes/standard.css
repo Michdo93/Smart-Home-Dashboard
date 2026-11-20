@@ -1,0 +1,35 @@
+/*
+ * Theme "standard" – schlicht, hell und dunkel.
+ * Ein Theme setzt nur Variablen (und darf einzelne Regeln ergänzen).
+ */
+:root {
+  --bg: #f3f5f8;
+  --surface: #ffffff;
+  --text: #1c2430;
+  --muted: #5f6b7a;
+  --line: #dde3ea;
+  --accent: #e08a00;
+  --accent-text: #1c2430;
+  --ok: #1e9e5a;
+  --bad: #d64545;
+  --radius: 14px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #10161f;
+    --surface: #18212d;
+    --text: #e8edf3;
+    --muted: #9aa7b7;
+    --line: #2a3646;
+    --accent: #ffb703;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #10161f;
+  --surface: #18212d;
+  --text: #e8edf3;
+  --muted: #9aa7b7;
+  --line: #2a3646;
+  --accent: #ffb703;
+}
