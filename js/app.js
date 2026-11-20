@@ -26,6 +26,9 @@ const params = new URLSearchParams(location.search);
 const store = new ItemStore();
 const $ = (selector) => document.querySelector(selector);
 
+// ?debug=1: Store in der Konsole des Browsers als window.store
+if (params.get("debug") === "1") window.store = store;
+
 let client;
 let items;
 let current = params.get("room") ?? "overview";
@@ -131,6 +134,7 @@ function render() {
 
   function show(page) {
     current = page.name;
+    store.newView();                      // Widgets der alten Ansicht abmelden
     tabs.forEach((tab, i) => tab.setAttribute("aria-selected", pages[i] === page));
     $("#content").replaceChildren(
       page.name === "overview" ? overview() : roomView(page));

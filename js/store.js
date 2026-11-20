@@ -32,18 +32,38 @@ export class ItemStore {
     this.notify(name);
   }
 
-  /** fn(item) wird sofort und bei jeder Änderung aufgerufen. */
-  subscribe(name, fn) {
+  /**
+   * fn(item) wird sofort und bei jeder Änderung aufgerufen – bis signal
+   * abbricht. Ohne Angabe gilt das Signal der aktuellen Ansicht (newView).
+   */
+  subscribe(name, fn, signal = this.viewSignal) {
+    if (signal?.aborted) return () => {};
     if (!this.observers.has(name)) this.observers.set(name, new Set());
     this.observers.get(name).add(fn);
+    const unsubscribe = () => this.observers.get(name).delete(fn);
+    signal?.addEventListener("abort", unsubscribe, { once: true });
     const item = this.items.get(name);
     if (item) fn(item);
-    return () => this.observers.get(name).delete(fn);
+    return unsubscribe;
+  }
+
+  /** Neue Ansicht: Alle Beobachter der vorigen melden sich ab. */
+  newView() {
+    this.view?.abort();
+    this.view = new AbortController();
+    this.viewSignal = this.view.signal;
   }
 
   notify(name) {
     const item = this.items.get(name);
     for (const fn of this.observers.get(name) ?? []) fn(item);
+  }
+
+  /** Anzahl der angemeldeten Beobachter (zur Fehlersuche) */
+  get observerCount() {
+    let count = 0;
+    for (const set of this.observers.values()) count += set.size;
+    return count;
   }
 
   /** Direkte Mitglieder einer Gruppe in der Reihenfolge der REST API. */
