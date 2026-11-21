@@ -35,6 +35,8 @@ Ein Dashboard für openHAB 5 in reinem HTML, CSS und JavaScript – ohne Framewo
 | `js/controller.js` | Controller | Verbinden, Laden, Befehle senden, Räume und Geräte aus dem Modell, Echtzeit mit Wächter – ohne Ansicht, auch für die Bootstrap- und Material-Ansicht |
 | `js/app.js` | View/Controller | Standard-Ansicht: Kopfzeile, Raumleiste, Übersicht, Karten, Einstellungen |
 | `css/dashboard.css` | – | Aufbau und Abstände |
+| `install.sh` | – | Installieren und Aktualisieren in openHAB |
+| `server/nginx-dashboard.conf` | – | nginx vor openHAB: HTTPS, Anmeldung, `no-cache` für das Dashboard |
 | `themes/standard.css` | – | Grund-Theme (Farben und Formen als CSS-Variablen) |
 | `lib/openhab.min.js` | – | [js-openhab-rest-client](https://github.com/Michdo93/js-openhab-rest-client) (Commit `5c5f160`, MIT) |
 | `lib/iro.min.js` | – | [iro.js](https://github.com/jaames/iro.js) 5.5.2 (MPL-2.0) |
@@ -52,9 +54,11 @@ Am einfachsten liefert openHAB das Dashboard selbst aus – dann gibt es keine C
 
 ```bash
 git clone https://github.com/Michdo93/Smart-Home-Dashboard
-sudo mkdir -p /etc/openhab/html/dashboard
-sudo cp -r Smart-Home-Dashboard/{index.html,config.js,css,js,lib,themes} /etc/openhab/html/dashboard/
+cd Smart-Home-Dashboard
+sudo ./install.sh                  # Ziel: /etc/openhab/html/dashboard
 ```
+
+Andere Installationen: `sudo ./install.sh /pfad/zu/openhab/conf/html/dashboard` (Docker: `/openhab/conf/html/dashboard` im Container). Eine vorhandene `config.js` bleibt erhalten; die neue Vorlage liegt dann als `config.js.neu` daneben. Installierte Themes und Ansichten bleiben.
 
 Aufrufen: `http://<openhab>:8080/static/dashboard/`
 
@@ -70,6 +74,19 @@ Adresszeile:
 | `&lang=en` | Sprache wählen |
 
 Zum Entwickeln geht auch ein lokaler Webserver (`python3 -m http.server 5173`). Dann `openhabUrl` auf Ihr openHAB setzen und dort CORS erlauben. Direkt als Datei (`file://`) laufen die JavaScript-Module nicht.
+
+## Aktualisieren
+
+```bash
+cd Smart-Home-Dashboard
+git pull && sudo ./install.sh
+```
+
+**Browser halten alte Dateien fest.** openHAB schickt für alles unter `/static/` den Kopf `Cache-Control: max-age=31536000` (ein Jahr). Nach einem Update zeigen Browser deshalb weiter die alte Fassung – auch nach *Neu laden* und nach einem Neustart des Browsers. Abhilfe:
+
+- beim Entwickeln: Entwicklerwerkzeuge → Netzwerk → *Cache deaktivieren*;
+- auf einem Gerät: Cache des Browsers leeren (Wandtablet im Kioskmodus: siehe Buch, Kapitel »Das Wandtablet«);
+- dauerhaft: einen nginx vor openHAB stellen, der `Cache-Control: no-cache` setzt. Eine fertige Einstellung mit HTTPS und Anmeldung liegt in [`server/nginx-dashboard.conf`](server/nginx-dashboard.conf).
 
 ## Themes und Ansichten
 
