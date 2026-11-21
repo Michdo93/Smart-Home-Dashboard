@@ -87,7 +87,7 @@ function hourTicks(start, end, hours) {
 }
 
 function draw(canvas, points, item, hours, start, end) {
-  const css = getComputedStyle(document.documentElement);
+  const css = getComputedStyle(document.body);   // auch für Ansichten
   const color = (name) => css.getPropertyValue(name).trim();
   const unit = item.unitSymbol ? ` ${item.unitSymbol}` : "";
   const format = (ms, options) => new Date(ms).toLocaleString(locale(), options);
