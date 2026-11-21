@@ -49,15 +49,35 @@ export function setupLock({ pin, afterMinutes, hint, startLocked = true } = {}) 
     pad.append(button);
   }
 
+  // Alles außer dem Sperrbildschirm unbedienbar machen: inert nimmt
+  // Elemente aus der Tab-Reihenfolge, verhindert Klicks und Fokus.
+  const shield = (on) => {
+    for (const node of document.body.children) {
+      if (node !== screen) node.inert = on;
+    }
+  };
+
   function lock() {
     entered = "";
     render();
     screen.hidden = false;
+    shield(true);
+    pad.querySelector("button")?.focus();
   }
   function unlock() {
     screen.hidden = true;
+    shield(false);
     restart();
   }
+
+  // PIN auch über die Tastatur (Laptop, Bluetooth-Tastatur am Tablet)
+  document.addEventListener("keydown", (event) => {
+    if (screen.hidden) return;
+    if (/^[0-9]$/.test(event.key)) press(event.key);
+    else if (event.key === "Backspace") press("⌫");
+    else return;
+    event.preventDefault();
+  });
 
   // automatisch sperren, wenn niemand das Dashboard bedient
   let timer;
