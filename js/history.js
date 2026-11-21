@@ -41,7 +41,8 @@ export function openHistory(item, loadHistory) {
       .filter((p) => p.y !== null && p.x >= start.getTime());
     note.textContent = result.error ?? (points.length ? "" : t("noHistory"));
     chart?.destroy();
-    chart = draw(canvas, points, item, range.hours, start, end);
+    const data = withGaps(points, range.hours);
+    chart = draw(canvas, data, item, range.hours, start, end);
   };
 
   for (const range of RANGES) {
@@ -58,6 +59,16 @@ function toNumber(state) {
   if (state === "OFF" || state === "CLOSED") return 0;
   const value = parseFloat(state);
   return Number.isNaN(value) ? null : value;
+}
+
+/**
+ * Lücken zeigen statt überbrücken: Lief openHAB eine Weile nicht, fehlen
+ * Werte. Ein Punkt ohne y-Wert unterbricht die Linie in Chart.js.
+ */
+function withGaps(points, hours) {
+  const limit = Math.max(15 * 60000, hours * 3600000 / 40);
+  return points.flatMap((p, i) => (i && p.x - points[i - 1].x > limit
+    ? [{ x: p.x - 1, y: null }, p] : [p]));
 }
 
 /** Teilstriche auf vollen Stunden: stündlich, alle 6 Stunden oder täglich */
@@ -104,7 +115,7 @@ function draw(canvas, points, item, hours, start, end) {
         x: {
           type: "linear", min: start.getTime(), max: end.getTime(),
           afterBuildTicks: (axis) => (axis.ticks = hourTicks(start, end, hours)),
-          ticks: { color: color("--muted"), callback: tick },
+          ticks: { color: color("--muted"), callback: tick, maxRotation: 0 },
           grid: { color: color("--line") }
         },
         y: { ticks: { color: color("--muted"),
