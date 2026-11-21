@@ -16,7 +16,7 @@ Ein Dashboard für openHAB 5 in reinem HTML, CSS und JavaScript – ohne Framewo
 - **Echtzeit** über Server-Sent Events (`ItemStateChangedEvent`), mit Wiederverbinden und Nachladen nach einer Unterbrechung.
 - **Uhrzeit** des Geräts in der Kopfzeile.
 - **Deutsch und Englisch** (i18n), Zahlen und Zeiten nach Sprache (l10n).
-- **Themes:** `standard`, `glas` und `eink` (schwarzweiß für E-Paper), jeweils hell und dunkel; ein Theme ist nur eine CSS-Datei mit Variablen. Kontrast nach WCAG geprüft (Text ≥ 4,5 : 1, Bedienelemente ≥ 3 : 1).
+- **Themes:** mitgeliefert ist `standard`; weitere Designs und ganze Ansichten installieren Sie aus eigenen Repos (siehe [Themes und Ansichten](#themes-und-ansichten)). Ein Theme ist nur eine CSS-Datei mit Variablen, hell und dunkel, Kontrast nach WCAG geprüft (Text ≥ 4,5 : 1, Bedienelemente ≥ 3 : 1).
 - **Sperrbildschirm** mit PIN, per Knopf oder nach einigen Minuten ohne Bedienung – ein Sichtschutz, keine Sicherheit.
 - **Wandtablets:** `?room=gVH_Kueche&kiosk=1` startet in einem Raum und blendet die Raumleiste aus.
 - **Mobile First**, jede Bedienfläche mindestens 44 × 44 px.
@@ -32,25 +32,19 @@ Ein Dashboard für openHAB 5 in reinem HTML, CSS und JavaScript – ohne Framewo
 | `js/color.js`, `js/history.js`, `js/dialog.js` | View | Farbkreis, Verlaufsdiagramm, Fenster |
 | `js/lock.js` | View | Sperrbildschirm |
 | `js/format.js`, `js/i18n.js` | View | Zustände lesbar machen, Texte in Deutsch und Englisch |
-| `js/app.js` | Controller | Laden, Modell aufbauen, Befehle senden, Ereignisse lesen, Einstellungen |
+| `js/controller.js` | Controller | Verbinden, Laden, Befehle senden, Räume und Geräte aus dem Modell, Echtzeit mit Wächter – ohne Ansicht, auch für die Bootstrap- und Material-Ansicht |
+| `js/app.js` | View/Controller | Standard-Ansicht: Kopfzeile, Raumleiste, Übersicht, Karten, Einstellungen |
 | `css/dashboard.css` | – | Aufbau und Abstände |
-| `themes/*.css` | – | Farben und Formen als CSS-Variablen |
+| `themes/standard.css` | – | Grund-Theme (Farben und Formen als CSS-Variablen) |
 | `lib/openhab.min.js` | – | [js-openhab-rest-client](https://github.com/Michdo93/js-openhab-rest-client) (Commit `5c5f160`, MIT) |
 | `lib/iro.min.js` | – | [iro.js](https://github.com/jaames/iro.js) 5.5.2 (MPL-2.0) |
 | `lib/chart.umd.min.js` | – | [Chart.js](https://github.com/chartjs/Chart.js) 4.6.1 (MIT) |
-| `lib/bootstrap/` | – | [Bootstrap](https://github.com/twbs/bootstrap) 5.3.8, nur CSS (MIT) – für Beispiel 02 |
-| `lib/beercss/` | – | [Beer CSS](https://github.com/beercss/beercss) 5.0.3 (MIT), [material-dynamic-colors](https://github.com/beercss/material-dynamic-colors) 1.1.4 (MIT), Material Symbols (Apache-2.0) – für Beispiel 03 |
 
 ## Beispiele zum Buch
 
 | Datei | Kapitel | Inhalt |
 |---|---|---|
 | `beispiele/01-erste-schritte.html` | 3 | Verbinden, Item lesen, Änderungen abonnieren, schalten |
-| `beispiele/raum.js` | 7 | Model und Controller für die Beispiele 02 und 03 (nutzt `js/store.js`, `js/widgets.js`, `js/format.js`) |
-| `beispiele/02-bootstrap.html`, `.js` | 7 | derselbe Raum mit [Bootstrap](https://getbootstrap.com) 5.3.8 |
-| `beispiele/03-material.html`, `.js` | 7 | derselbe Raum in Material Design 3 mit [Beer CSS](https://www.beercss.com) 5.0.3 |
-
-Die Beispiele 02 und 03 zeigen den Raum aus `?room=` (Voreinstellung `gVH_Wohnzimmer`).
 
 ## Installation
 
@@ -77,6 +71,26 @@ Adresszeile:
 
 Zum Entwickeln geht auch ein lokaler Webserver (`python3 -m http.server 5173`). Dann `openhabUrl` auf Ihr openHAB setzen und dort CORS erlauben. Direkt als Datei (`file://`) laufen die JavaScript-Module nicht.
 
+## Themes und Ansichten
+
+Jedes Design liegt in einem eigenen Repo mit Installationsskript und eigener Online-Demo:
+
+| Repo | Art | Idee | Online-Demo |
+|---|---|---|---|
+| [theme-standard](https://github.com/Michdo93/smart-home-dashboard-theme-standard) | CSS-Theme | schlicht, hell und dunkel; Vorlage für eigene Themes (hier schon enthalten) | [Demo](https://michdo93.github.io/smart-home-dashboard-theme-standard-live-demo/) |
+| [theme-glas](https://github.com/Michdo93/smart-home-dashboard-theme-glas) | CSS-Theme | Farbverlauf, halbdurchsichtige Karten, Weichzeichner | [Demo](https://michdo93.github.io/smart-home-dashboard-theme-glas-live-demo/) |
+| [theme-eink](https://github.com/Michdo93/smart-home-dashboard-theme-eink) | CSS-Theme | schwarz auf weiß für E-Paper-Displays, Form statt Farbe | [Demo](https://michdo93.github.io/smart-home-dashboard-theme-eink-live-demo/) |
+| [theme-bootstrap](https://github.com/Michdo93/smart-home-dashboard-theme-bootstrap) | Ansicht | dasselbe Dashboard mit Bootstrap 5 | [Demo](https://michdo93.github.io/smart-home-dashboard-theme-bootstrap-live-demo/) |
+| [theme-material](https://github.com/Michdo93/smart-home-dashboard-theme-material) | Ansicht | Material Design 3 (Beer CSS), Farben aus einer Markenfarbe | [Demo](https://michdo93.github.io/smart-home-dashboard-theme-material-live-demo/) |
+
+Ein **CSS-Theme** ersetzt nur Farben und Formen und erscheint unter Zahnrad → Design. Eine **Ansicht** baut die Oberfläche mit einem anderen Framework neu und nutzt dafür den Controller dieses Repos (`js/controller.js`); sie liegt als Unterordner im Dashboard, z. B. `…/dashboard/bootstrap/`.
+
+```bash
+git clone https://github.com/Michdo93/smart-home-dashboard-theme-glas
+sudo smart-home-dashboard-theme-glas/install.sh          # trägt "glas" in config.js ein
+sudo smart-home-dashboard-theme-glas/install.sh --default # … und startet damit
+```
+
 ## Voraussetzungen an das Modell
 
 - Räume sind Gruppen unter `rootGroup`, die selbst Gruppen (Geräte) enthalten.
@@ -93,7 +107,7 @@ String Wohnzimmer_Farblampe_Effekt "Effekt [%s]" (Wohnzimmer_Farblampe) ["Contro
 
 ## Getestet
 
-Mit openHAB 5.2.3 und dem virtuellen Haus in Chromium (Playwright), als Smartphone (Pixel 7) und Tablet (1280 × 800): Schalter, Slider, Sollwert, Auswahl, Farbkreis und Rollladen kommen in openHAB an; Änderungen von außen erscheinen live; Verlauf, Sperrbildschirm, Englisch, Theme „glas“ und Kioskmodus. Dieselbe Prüfung lief unverändert über den Proxy der Live-Demo.
+Mit openHAB 5.2.3 und dem virtuellen Haus in Chromium (Playwright), als Smartphone (Pixel 7) und Tablet (1280 × 800): Schalter, Slider, Sollwert, Auswahl, Farbkreis und Rollladen kommen in openHAB an; Änderungen von außen erscheinen live; Verlauf, Sperrbildschirm, Englisch, Themes und Kioskmodus; Wiederverbinden nach Ausfall und Wächter bei stummer Verbindung. Dieselbe Prüfung lief unverändert über den Proxy der Live-Demo.
 
 ## Unterstützen
 

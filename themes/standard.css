@@ -1,6 +1,7 @@
 /*
  * Theme "standard" – schlicht, hell und dunkel.
  * Ein Theme setzt nur Variablen (und darf einzelne Regeln ergänzen).
+ * Mitgeliefertes Grund-Theme; gepflegt in smart-home-dashboard-theme-standard.
  */
 :root {
   --bg: #f3f5f8;

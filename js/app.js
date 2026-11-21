@@ -1,15 +1,14 @@
 /**
- * app.js – Controller: verbindet openHAB, Store und Ansicht.
- *
- * Nutzt nur die Klassen von js-openhab-rest-client (window.openHAB). Mit
- * js-openhab-proxy-client funktioniert dieselbe Datei unverändert.
+ * app.js – die Standard-Ansicht: Kopfzeile, Raumleiste, Übersicht, Karten,
+ * Einstellungen. Verbindung, Store, Befehle und Echtzeit übernimmt der
+ * Controller (controller.js).
  *
  * Adresszeile (z. B. für Wandtablets):
  *   ?room=gVH_Kueche   mit diesem Raum starten
  *   &kiosk=1           Raumleiste und Einstellungen ausblenden
  *   &theme=glas        Design wählen, &lang=en Sprache wählen
  */
-import { ItemStore } from "./store.js";
+import { createController } from "./controller.js";
 import { deviceCard } from "./modules.js";
 import { formatState } from "./format.js";
 import { language, languages, locale, setLanguage, t } from "./i18n.js";
@@ -19,19 +18,14 @@ import { openDialog } from "./dialog.js";
 import { setupLock } from "./lock.js";
 
 const config = window.DASHBOARD_CONFIG;
-const {
-  OpenHABClient, Items, ItemEvents, Persistence, iterSSELines, parseSSEData
-} = window.openHAB;
-const SILENCE_MS = 30000;   // so lange ohne Lebenszeichen gilt die Verbindung als tot
 const params = new URLSearchParams(location.search);
-const store = new ItemStore();
 const $ = (selector) => document.querySelector(selector);
+const controller = createController(config, { onStatus: status, onError: toast });
+const { store, send } = controller;
 
 // ?debug=1: Store in der Konsole des Browsers als window.store
 if (params.get("debug") === "1") window.store = store;
 
-let client;
-let items;
 let current = params.get("room") ?? "overview";
 
 /** Das Gerät (die Gruppe), zu dem ein Punkt gehört */
@@ -42,7 +36,8 @@ const ctx = {
   store,
   send,
   color: (item) => openColorWheel(item, send, deviceOf(item)?.label),
-  history: Persistence ? (item) => openHistory(item, loadHistory) : null
+  history: controller.loadHistory
+    ? (item) => openHistory(item, controller.loadHistory) : null
 };
 
 async function start() {
@@ -59,71 +54,19 @@ async function start() {
   $("#lock").addEventListener("click", () => lock.lock());
   clock();
 
-  client = await new OpenHABClient(config.openhabUrl, null, null, config.token).ready;
-  items = new Items(client);
-  if (!(await reload())) return;
-  render();
-  watch();
-}
-
-/** Lädt alle Items; true, wenn es geklappt hat. */
-async function reload() {
-  const list = await items.getItems();
-  if (list.error) {
-    status("offline", `${t("unreachable")}: ${list.error}`);
+  if (!(await controller.connect())) {
     $("#content").textContent = t("unreachable");
-    return false;
+    return;
   }
-  store.load(list);
-  return true;
-}
-
-/** Befehl senden; Fehler zeigt ein kurzer Hinweis. */
-async function send(name, command) {
-  const result = await items.sendCommand(name, String(command));
-  if (result.error) toast(`${store.get(name)?.label ?? name}: ${result.error}`);
-}
-
-/** Verlauf aus der Persistence (Dienst aus config.persistenceService). */
-function loadHistory(name, start, end) {
-  return new Persistence(client).getItemPersistenceData(name,
-    config.persistenceService ?? null,
-    { startTime: start.toISOString(), endTime: end.toISOString() });
-}
-
-// ─── Modell: Räume → Geräte → Punkte ────────────────────────────────────────
-
-function rooms() {
-  const order = config.roomOrder ?? [];
-  const rank = (name) => (order.includes(name) ? order.indexOf(name) : order.length);
-  const direct = store.members(config.rootGroup);
-  const roomGroups = direct.filter((item) => item.type === "Group"
-    && store.members(item.name).some((member) => member.type === "Group"));
-  const rest = direct.filter((item) => !roomGroups.includes(item));
-  const list = roomGroups.sort((a, b) => rank(a.name) - rank(b.name)
-    || a.label.localeCompare(b.label));
-  if (rest.length) {
-    list.push({ name: config.rootGroup, label: t("house"), only: rest });
-  }
-  return list;
-}
-
-function devices(room) {
-  const members = room.only ?? store.members(room.name);
-  const groups = members.filter((item) => item.type === "Group");
-  const loose = members.filter((item) => item.type !== "Group");
-  const list = groups.map((group) => ({ group, points: store.members(group.name) }));
-  if (loose.length) {
-    list.push({ group: { label: t("room"), name: "" }, points: loose });
-  }
-  return list.filter((device) => device.points.length);
+  render();
+  controller.watch();
 }
 
 // ─── Ansicht ────────────────────────────────────────────────────────────────
 
 function render() {
   const nav = $("#rooms");
-  const pages = [{ name: "overview", label: t("overview") }, ...rooms()];
+  const pages = [{ name: "overview", label: t("overview") }, ...controller.rooms()];
   const tabs = pages.map((page) => {
     const button = document.createElement("button");
     button.textContent = page.label;
@@ -174,48 +117,8 @@ function overview() {
 function roomView(room) {
   const grid = document.createElement("div");
   grid.className = "cards";
-  grid.append(...devices(room).map((device) => deviceCard(device, ctx)));
+  grid.append(...controller.devices(room).map((device) => deviceCard(device, ctx)));
   return grid;
-}
-
-// ─── Echtzeit ───────────────────────────────────────────────────────────────
-
-/**
- * Liest Zustandsänderungen und verbindet sich nach einem Abbruch neu.
- * openHAB schickt alle 10 s ein ALIVE (der Proxy der Live-Demo einen
- * Kommentar). Bleibt jedes Lebenszeichen 30 s aus – etwa weil das WLAN
- * eines Tablets eingeschlafen ist –, bricht der Wächter ab und verbindet neu.
- */
-async function watch() {
-  let first = true;
-  while (true) {
-    const stream = await new ItemEvents(client).ItemStateChangedEvent();
-    if (!stream.error) {
-      if (!first) await reload();          // Änderungen während der Pause
-      first = false;
-      status("online", t("online"));
-      let heard = Date.now();
-      const guard = setInterval(() => {
-        if (Date.now() - heard > SILENCE_MS) stream.abort?.();
-      }, 5000);
-      try {
-        for await (const line of iterSSELines(stream)) {
-          heard = Date.now();               // jede Zeile ist ein Lebenszeichen
-          const event = parseSSEData(line);
-          const value = event?.payload?.value;
-          if (event?.topic && value !== undefined) {
-            store.setState(event.topic.split("/")[2], value);
-          }
-        }
-      } catch (err) {
-        console.warn("Ereignisstrom:", err);
-      } finally {
-        clearInterval(guard);
-      }
-    }
-    status("offline", t("offline"));
-    await new Promise((resolve) => setTimeout(resolve, 5000));
-  }
 }
 
 // ─── Kopfzeile: Uhr, Status, Hinweise ───────────────────────────────────────
@@ -260,8 +163,12 @@ function remember(key, value) {
   try { localStorage.setItem(key, value); } catch { /* privates Fenster */ }
 }
 
+/** Installierte Themes; ohne Eintrag gilt das mitgelieferte "standard" */
+const installedThemes = () =>
+  (config.themes?.length ? config.themes : ["standard"]);
+
 function applyTheme(name) {
-  const themes = config.themes ?? ["standard"];
+  const themes = installedThemes();
   const theme = themes.includes(name) ? name : themes[0];
   $("#theme-css").href = `themes/${theme}.css`;
   document.documentElement.dataset.themeName = theme;
@@ -289,7 +196,7 @@ function openSettings() {
   openDialog(t("settings"),
     choice(t("language"), languages().map((l) => [l, l.toUpperCase()]), language(),
       (value) => { remember("lang", value); setLanguage(value); refresh(); }),
-    choice(t("theme"), (config.themes ?? ["standard"]).map((n) => [n, n]),
+    choice(t("theme"), installedThemes().map((n) => [n, n]),
       document.documentElement.dataset.themeName,
       (value) => { remember("theme", value); applyTheme(value); }),
     choice(t("mode"),

@@ -19,8 +19,10 @@ window.DASHBOARD_CONFIG = {
   // Sprache beim ersten Aufruf: "de" oder "en"
   language: "de",
 
-  // Designs aus dem Ordner themes/ (das erste ist die Voreinstellung)
-  themes: ["standard", "glas", "eink"],
+  // Designs aus dem Ordner themes/ (das erste ist die Voreinstellung).
+  // Weitere Themes tragen sich bei der Installation selbst ein, z. B.
+  // smart-home-dashboard-theme-glas: sudo ./install.sh
+  themes: ["standard"],
 
   // Dienst für die Verlaufsdiagramme; null = Standard von openHAB
   persistenceService: "rrd4j",
