@@ -20,8 +20,9 @@ import { setupLock } from "./lock.js";
 
 const config = window.DASHBOARD_CONFIG;
 const {
-  OpenHABClient, Items, ItemEvents, Persistence, iterSSEEvents
+  OpenHABClient, Items, ItemEvents, Persistence, iterSSELines, parseSSEData
 } = window.openHAB;
+const SILENCE_MS = 30000;   // so lange ohne Lebenszeichen gilt die Verbindung als tot
 const params = new URLSearchParams(location.search);
 const store = new ItemStore();
 const $ = (selector) => document.querySelector(selector);
@@ -179,7 +180,12 @@ function roomView(room) {
 
 // ─── Echtzeit ───────────────────────────────────────────────────────────────
 
-/** Liest Zustandsänderungen und verbindet sich nach einem Abbruch neu. */
+/**
+ * Liest Zustandsänderungen und verbindet sich nach einem Abbruch neu.
+ * openHAB schickt alle 10 s ein ALIVE (der Proxy der Live-Demo einen
+ * Kommentar). Bleibt jedes Lebenszeichen 30 s aus – etwa weil das WLAN
+ * eines Tablets eingeschlafen ist –, bricht der Wächter ab und verbindet neu.
+ */
 async function watch() {
   let first = true;
   while (true) {
@@ -188,14 +194,23 @@ async function watch() {
       if (!first) await reload();          // Änderungen während der Pause
       first = false;
       status("online", t("online"));
+      let heard = Date.now();
+      const guard = setInterval(() => {
+        if (Date.now() - heard > SILENCE_MS) stream.abort?.();
+      }, 5000);
       try {
-        for await (const event of iterSSEEvents(stream)) {
-          const name = event.topic.split("/")[2];
-          const value = event.payload?.value;
-          if (value !== undefined) store.setState(name, value);
+        for await (const line of iterSSELines(stream)) {
+          heard = Date.now();               // jede Zeile ist ein Lebenszeichen
+          const event = parseSSEData(line);
+          const value = event?.payload?.value;
+          if (event?.topic && value !== undefined) {
+            store.setState(event.topic.split("/")[2], value);
+          }
         }
       } catch (err) {
         console.warn("Ereignisstrom:", err);
+      } finally {
+        clearInterval(guard);
       }
     }
     status("offline", t("offline"));

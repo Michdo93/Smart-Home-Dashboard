@@ -26,16 +26,19 @@ export function openHistory(item, loadHistory) {
   openDialog(`${item.label} – ${t("history")}`, buttons, frame, note);
 
   let chart;
+  let latest = 0;              // nur die Antwort auf den letzten Klick zählt
   const show = async (range, button) => {
     for (const other of buttons.children) {
       other.setAttribute("aria-pressed", other === button);
     }
+    const request = ++latest;
     const end = new Date();
     const start = new Date(end.getTime() - range.hours * 3600 * 1000);
     const result = await loadHistory(item.name, start, end);
+    if (request !== latest) return;      // inzwischen anderer Bereich gewählt
     const points = (result.data ?? [])
       .map((p) => ({ x: Number(p.time), y: toNumber(p.state) }))
-      .filter((p) => p.y !== null);
+      .filter((p) => p.y !== null && p.x >= start.getTime());
     note.textContent = result.error ?? (points.length ? "" : t("noHistory"));
     chart?.destroy();
     chart = draw(canvas, points, item, range.hours, start, end);
@@ -57,12 +60,30 @@ function toNumber(state) {
   return Number.isNaN(value) ? null : value;
 }
 
+/** Teilstriche auf vollen Stunden: stündlich, alle 6 Stunden oder täglich */
+function hourTicks(start, end, hours) {
+  const every = hours <= 6 ? 1 : hours <= 24 ? 6 : 24;
+  const tick = new Date(start);
+  tick.setMinutes(0, 0, 0);
+  const ticks = [];
+  while (tick <= end) {
+    if (tick >= start && tick.getHours() % every === 0) {
+      ticks.push({ value: tick.getTime() });
+    }
+    tick.setHours(tick.getHours() + 1);
+  }
+  return ticks;
+}
+
 function draw(canvas, points, item, hours, start, end) {
   const css = getComputedStyle(document.documentElement);
   const color = (name) => css.getPropertyValue(name).trim();
   const unit = item.unitSymbol ? ` ${item.unitSymbol}` : "";
-  const time = (ms) => new Date(ms).toLocaleString(locale(), hours > 24
-    ? { weekday: "short", hour: "2-digit" } : { hour: "2-digit", minute: "2-digit" });
+  const format = (ms, options) => new Date(ms).toLocaleString(locale(), options);
+  const tick = (ms) => format(ms, hours > 24
+    ? { weekday: "short", day: "numeric" } : { hour: "2-digit", minute: "2-digit" });
+  const time = (ms) => format(ms,
+    { weekday: "short", hour: "2-digit", minute: "2-digit" });
   return new window.Chart(canvas, {
     type: "line",
     data: { datasets: [{
@@ -82,7 +103,8 @@ function draw(canvas, points, item, hours, start, end) {
       scales: {
         x: {
           type: "linear", min: start.getTime(), max: end.getTime(),
-          ticks: { color: color("--muted"), maxTicksLimit: 6, callback: time },
+          afterBuildTicks: (axis) => (axis.ticks = hourTicks(start, end, hours)),
+          ticks: { color: color("--muted"), callback: tick },
           grid: { color: color("--line") }
         },
         y: { ticks: { color: color("--muted"),
