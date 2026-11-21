@@ -24,6 +24,9 @@ window.DASHBOARD_CONFIG = {
   // smart-home-dashboard-theme-glas: sudo ./install.sh
   themes: ["standard"],
 
+  // Grundfarbe für die Material-Ansicht (smart-home-dashboard-theme-material)
+  brandColor: "#c97a00",
+
   // Dienst für die Verlaufsdiagramme; null = Standard von openHAB
   persistenceService: "rrd4j",
 
