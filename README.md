@@ -15,7 +15,7 @@ Ein Dashboard für openHAB 5 in reinem HTML, CSS und JavaScript – ohne Framewo
 - **Verlaufsdiagramme** aus der Persistence mit [Chart.js](https://www.chartjs.org): Klick auf einen Zahlenwert, 6 h, 24 h oder 7 Tage.
 - **Echtzeit** über Server-Sent Events (`ItemStateChangedEvent`), mit Wiederverbinden und Nachladen nach einer Unterbrechung.
 - **Uhrzeit** des Geräts in der Kopfzeile.
-- **Deutsch und Englisch** (i18n), Zahlen und Zeiten nach Sprache (l10n).
+- **Deutsch, Englisch und Französisch** (i18n), Zahlen und Zeiten nach Sprache (l10n); weitere Sprachen in `js/i18n.js`.
 - **Themes:** mitgeliefert ist `standard`; weitere Designs und ganze Ansichten installieren Sie aus eigenen Repos (siehe [Themes und Ansichten](#themes-und-ansichten)). Ein Theme ist nur eine CSS-Datei mit Variablen, hell und dunkel, Kontrast nach WCAG geprüft (Text ≥ 4,5 : 1, Bedienelemente ≥ 3 : 1).
 - **Sperrbildschirm** mit PIN, per Knopf oder nach einigen Minuten ohne Bedienung – ein Sichtschutz, keine Sicherheit.
 - **Wandtablets:** `?room=gVH_Kueche&kiosk=1` startet in einem Raum und blendet die Raumleiste aus.

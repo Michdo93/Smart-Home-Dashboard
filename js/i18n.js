@@ -1,5 +1,5 @@
 /**
- * i18n.js – Texte der Oberfläche in Deutsch und Englisch.
+ * i18n.js – Texte der Oberfläche in Deutsch, Englisch und Französisch.
  *
  * i18n (internationalization): Texte stehen nicht im Code, sondern in
  * Wörterbüchern. l10n (localization): Zahlen, Datum und Uhrzeit folgen den
@@ -37,10 +37,26 @@ const TEXTS = {
     previous: "previous", play: "play", next: "next",
     color: "Choose colour", history: "History", hours: "{n} h", days: "{n} days",
     noHistory: "No data for this period.", setpoint: "Target", heating: "heating"
+  },
+  fr: {
+    overview: "Aperçu", house: "Maison", room: "Pièce", loading: "Chargement …",
+    online: "connecté", offline: "Connexion perdue – nouvel essai …",
+    unreachable: "openHAB injoignable", of: "sur",
+    on: "allumé", off: "éteint", open: "ouvert", closed: "fermé",
+    playing: "en lecture", paused: "en pause",
+    settings: "Réglages", language: "Langue", theme: "Thème",
+    mode: "Clair ou sombre", light: "clair", dark: "sombre", auto: "comme le système",
+    lock: "Verrouiller", locked: "Verrouillé", enterPin: "Saisir le code",
+    wrongPin: "Code incorrect", close: "Fermer", delete: "Effacer",
+    up: "monter", stop: "arrêt", down: "descendre", less: "moins", more: "plus",
+    previous: "précédent", play: "lecture", next: "suivant",
+    color: "Choisir la couleur", history: "Historique", hours: "{n} h",
+    days: "{n} jours", noHistory: "Aucune donnée pour cette période.",
+    setpoint: "Consigne", heating: "chauffe"
   }
 };
 
-const LOCALES = { de: "de-DE", en: "en-GB" };
+const LOCALES = { de: "de-DE", en: "en-GB", fr: "fr-FR" };
 let current = "de";
 
 export function setLanguage(language) {
