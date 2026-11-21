@@ -95,6 +95,12 @@ String Wohnzimmer_Farblampe_Effekt "Effekt [%s]" (Wohnzimmer_Farblampe) ["Contro
 
 Mit openHAB 5.2.3 und dem virtuellen Haus in Chromium (Playwright), als Smartphone (Pixel 7) und Tablet (1280 × 800): Schalter, Slider, Sollwert, Auswahl, Farbkreis und Rollladen kommen in openHAB an; Änderungen von außen erscheinen live; Verlauf, Sperrbildschirm, Englisch, Theme „glas“ und Kioskmodus. Dieselbe Prüfung lief unverändert über den Proxy der Live-Demo.
 
+## Unterstützen
+
+Wenn Ihnen dieses Projekt hilft, freue ich mich über einen Kaffee:
+
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/Michdo93)
+
 ## Lizenz
 
 MIT – siehe [LICENSE](LICENSE).
